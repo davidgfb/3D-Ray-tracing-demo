@@ -1,5 +1,7 @@
-from ray_tracing_functions import *
-
+from vector_functions import normalize_vec3,sub_vecs3,mul_vec3_n,dot_vecs3
+from ray_tracing_functions import intersect
+from numpy import inf
+from settings import WIDTH,HEIGHT,TAN_A
 
 obj0 = ('plane', 0.0, -1.1, 0.0, 0.0, 0.25)
 obj1 = ('sphere', 0.0, -0.3, -3.5, 0.8, 0.7)
@@ -13,8 +15,7 @@ spec_color = (0.1, 0.1, 0.1)
 light_pos = (-3.0, 15.0, 2.5)
 origin = (0.0, 0.0, 0.0)
 
-
-@njit(fastmath=True)#, cache=True)
+#@njit(fastmath=True)#, cache=True)
 def ray_tracing(key):
     SCALE = key[5]
     REAL_WIDTH = WIDTH // SCALE
@@ -33,23 +34,23 @@ def ray_tracing(key):
             reflection = 1
             # reflection steps
             for depth in range(depth_max):
-                t = np.inf
+                t = inf
                 for i,obj in enumerate(scene):
                     t_obj, p_obj, n_obj = intersect(ro, rd, obj[:-1])
                     if 0 < t_obj < t:
                         t, p, N, obj_ind = t_obj, p_obj, n_obj, i
-                if t == np.inf:
-                    break
+                if t == inf:
+                    break ######!
 
                 # find if the point is shadowed or not
                 L = normalize_vec3(sub_vecs3(light_pos, p))
-                t_sh = np.inf
+                t_sh = inf
                 for i, obj in enumerate(scene):
                     if i != obj_ind:
                         t_obj, _, _ = intersect(sum_vecs3(p, mul_vec3_n(N, 0.0001)), L, obj[:-1])
                         if 0 < t_obj < t_sh:
                             t_sh = t_obj
-                if t_sh < np.inf:
+                if t_sh < inf:
                     break
 
                 # shading

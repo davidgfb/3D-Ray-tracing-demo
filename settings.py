@@ -1,4 +1,4 @@
-import math
+from math import radians,tan
 
 WIDTH = 1280
 HEIGHT = 720
@@ -9,8 +9,8 @@ HALF_REAL_WIDTH = REAL_WIDTH // 2
 HALF_REAL_HEIGHT = REAL_HEIGHT // 2
 
 ASPECT_RATIO = REAL_WIDTH / REAL_HEIGHT #* 0.9
-FOV = math.radians(90)
-TAN_A = math.tan(FOV / 2)
+FOV = radians(90)
+TAN_A = tan(FOV / 2)
 CAM_DIST = -HALF_REAL_HEIGHT / TAN_A
 
 # camera
